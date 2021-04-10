@@ -1,6 +1,7 @@
-package repositories;
+package com.linyuanlin.LibraryManagement.repository;
 
-import models.Book;
+
+import com.linyuanlin.LibraryManagement.model.Book;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

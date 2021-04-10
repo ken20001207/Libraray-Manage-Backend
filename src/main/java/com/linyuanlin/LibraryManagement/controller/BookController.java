@@ -1,10 +1,10 @@
-package controllers;
+package com.linyuanlin.LibraryManagement.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.linyuanlin.LibraryManagement.model.Book;
+import com.linyuanlin.LibraryManagement.service.BookService;
 import io.javalin.http.Context;
-import models.Book;
-import services.BookService;
 
 import java.sql.Connection;
 import java.util.Optional;

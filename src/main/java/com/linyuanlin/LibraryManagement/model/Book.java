@@ -1,4 +1,4 @@
-package models;
+package com.linyuanlin.LibraryManagement.model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

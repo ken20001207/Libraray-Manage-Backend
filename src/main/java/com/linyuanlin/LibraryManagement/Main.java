@@ -1,11 +1,13 @@
-import controllers.BookController;
+package com.linyuanlin.LibraryManagement;
+
+import com.linyuanlin.LibraryManagement.controller.BookController;
 import io.javalin.Javalin;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class LibraryManagement {
+public class Main {
     public static void main(String[] args) {
 
         Javalin app = Javalin.create(config ->

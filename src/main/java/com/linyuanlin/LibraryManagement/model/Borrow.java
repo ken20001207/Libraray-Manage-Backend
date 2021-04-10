@@ -1,4 +1,4 @@
-package models;
+package com.linyuanlin.LibraryManagement.model;
 
 import java.util.Date;
 

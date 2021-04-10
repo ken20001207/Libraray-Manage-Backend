@@ -1,7 +1,7 @@
-package services;
+package com.linyuanlin.LibraryManagement.service;
 
-import models.Book;
-import repositories.BookDAO;
+import com.linyuanlin.LibraryManagement.model.Book;
+import com.linyuanlin.LibraryManagement.repository.BookDAO;
 
 import java.sql.Connection;
 import java.util.Optional;
