@@ -1,5 +1,8 @@
 package models;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Book {
     private String boolNumber;
     private String title;
@@ -8,9 +11,21 @@ public class Book {
     private String city;
     private String author;
     private String category;
-    private String price;
+    private double price;
     private int total;
     private int stock;
+
+    public Book(ResultSet rs) throws SQLException {
+        this.boolNumber = rs.getString("bno");
+        this.category = rs.getString("category");
+        this.title = rs.getString("title");
+        this.press = rs.getString("press");
+        this.year = rs.getInt("year");
+        this.author = rs.getString("author");
+        this.price = rs.getDouble("price");
+        this.total = rs.getInt("total");
+        this.stock = rs.getInt("stock");
+    }
 
     public String getBoolNumber() {
         return boolNumber;
@@ -68,11 +83,11 @@ public class Book {
         this.category = category;
     }
 
-    public String getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
