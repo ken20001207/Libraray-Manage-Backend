@@ -1,7 +1,5 @@
 # Library-Manage-Backend
 
-# Introduction
-
 A simple library management system RESTful API server built
 with [Javalin](https://github.com/tipsy/javalin) framework, as my database
 course homework.
