@@ -1,7 +1,7 @@
 package com.linyuanlin.LibraryManagement.repository;
 
 
-import com.linyuanlin.LibraryManagement.model.Book;
+import com.linyuanlin.LibraryManagement.model.Borrow;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -11,58 +11,57 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class BookDAO {
+public class BorrowDAO {
     final Connection dataSource;
 
-    public BookDAO(Connection dataSource) {
+    public BorrowDAO(Connection dataSource) {
         this.dataSource = dataSource;
     }
 
-    public List<Book> getAll() {
-        List<Book> books = new ArrayList<>();
+    public List<Borrow> getAll() {
+        List<Borrow> borrows = new ArrayList<>();
         try {
             Statement stmt = dataSource.createStatement();
-            String sql = "SELECT * FROM book";
+            String sql = "SELECT * FROM borrow";
             ResultSet rs = stmt.executeQuery(sql);
 
-            while (rs.next()) books.add(new Book(rs));
+            while (rs.next()) borrows.add(new Borrow(rs));
 
             rs.close();
             stmt.close();
         } catch (SQLException throwable) {
             throwable.printStackTrace();
         }
-        return books;
+        return borrows;
     }
 
-    public Optional<Book> getOneByBookNumber(String bookNumber) {
+    public Optional<Borrow> getOneByUUID(String uuid) {
         try {
             Statement stmt = dataSource.createStatement();
-            String sql = "SELECT * FROM book WHERE bno='" + bookNumber + "'";
+            String sql = "SELECT * FROM borrow WHERE uuid='" + uuid + "'";
             ResultSet rs = stmt.executeQuery(sql);
 
-            Book book;
-            if (rs.next()) book = new Book(rs);
+            Borrow borrow;
+            if (rs.next()) borrow = new Borrow(rs);
             else return Optional.empty();
 
             rs.close();
             stmt.close();
-            return Optional.of(book);
+            return Optional.of(borrow);
         } catch (SQLException throwable) {
             throwable.printStackTrace();
         }
         return Optional.empty();
     }
 
-    public Book insert(Book book) {
+    public Borrow insert(Borrow borrow) {
         try {
             Statement stmt = dataSource.createStatement();
 
-            String sql = "INSERT INTO book value (" +
-                    book.getBoolNumber() + "," + book.getCategory() + "," +
-                    book.getTitle() + "," + book.getPress() + "," +
-                    book.getYear() + "," + book.getAuthor() + "," +
-                    book.getPrice() + "," + book.getTotal() + "," + book.getStock() + ")";
+            String sql = "INSERT INTO borrow value ("
+                    + borrow.getUuid() + ", " + borrow.getCardNumber() + ", "
+                    + borrow.getBookNumber() + ", " + borrow.getBorrowDate() + ", "
+                    + borrow.getReturnDate() + ")";
 
             ResultSet rs = stmt.executeQuery(sql);
             rs.close();
@@ -70,18 +69,17 @@ public class BookDAO {
         } catch (SQLException throwable) {
             throwable.printStackTrace();
         }
-        return book;
+        return borrow;
     }
 
-    public Book update(Book book) {
+    public Borrow update(Borrow borrow) {
         try {
             Statement stmt = dataSource.createStatement();
 
-            String sql = "UPDATE book SET bno=" +
-                    book.getBoolNumber() + ", category=" + book.getCategory() + ", title=" +
-                    book.getTitle() + ", press=" + book.getPress() + ", year=" +
-                    book.getYear() + ", author=" + book.getAuthor() + ", price=" +
-                    book.getPrice() + ", total=" + book.getTotal() + ", stock=" + book.getStock() + ")";
+            String sql = "UPDATE borrow SET uuid='"
+                    + borrow.getUuid() + "', cno='" + borrow.getCardNumber() + "', bno='"
+                    + borrow.getBookNumber() + "', borrow_date=" + borrow.getBorrowDate() + ", return_date="
+                    + borrow.getReturnDate() + ")";
 
             ResultSet rs = stmt.executeQuery(sql);
             rs.close();
@@ -89,14 +87,14 @@ public class BookDAO {
         } catch (SQLException throwable) {
             throwable.printStackTrace();
         }
-        return book;
+        return borrow;
     }
 
-    public void delete(String bookNumber) {
+    public void delete(String uuid) {
         try {
             Statement stmt = dataSource.createStatement();
 
-            String sql = "DELETE FROM book WHERE bno=" + bookNumber;
+            String sql = "DELETE FROM borrow WHERE uuid=" + uuid;
 
             ResultSet rs = stmt.executeQuery(sql);
             rs.close();
