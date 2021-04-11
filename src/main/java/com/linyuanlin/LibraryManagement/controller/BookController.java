@@ -3,8 +3,10 @@ package com.linyuanlin.LibraryManagement.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linyuanlin.LibraryManagement.model.Book;
+import com.linyuanlin.LibraryManagement.model.CustomException;
 import com.linyuanlin.LibraryManagement.service.BookService;
 import io.javalin.http.Context;
+import org.eclipse.jetty.http.HttpStatus;
 
 import java.sql.Connection;
 import java.util.Optional;
@@ -17,14 +19,16 @@ public class BookController {
         this.bookService = new BookService(dataSource);
     }
 
-    public void getOneBookHandler(Context ctx) {
+    public void getOneBookHandler(Context ctx) throws CustomException {
 
-        Optional<Book> book = bookService.getOneByBookNumber(ctx.pathParam("bookNumber"));
+        Optional<Book> book = bookService.getOne(ctx.pathParam("bookNumber"));
 
         if (book.isEmpty()) {
-            ctx.status(404);
-            ctx.result("{\"code\": \"BOOK_NOT_FOUND\", \"book_number\": " + ctx.pathParam("bookNumber") + "}");
-            return;
+            throw new CustomException(
+                    "BOOK_NOT_FOUND",
+                    "Book with bookNumber " + ctx.pathParam("bookNumber") + " not found",
+                    HttpStatus.NOT_FOUND_404
+            );
         }
 
         try {
@@ -35,5 +39,21 @@ public class BookController {
             ctx.status(500);
             ctx.result("{\"code\": \"INTERNAL_SERVER_ERROR\"}");
         }
+    }
+
+    public void getManyBookHandler(Context ctx) {
+
+    }
+
+    public void insertBookHandler(Context ctx) {
+
+    }
+
+    public void updateBookHandler(Context ctx) {
+
+    }
+
+    public void deleteBookHandler(Context ctx) {
+
     }
 }
