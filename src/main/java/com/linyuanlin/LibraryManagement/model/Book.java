@@ -15,6 +15,9 @@ public class Book {
     private int total;
     private int stock;
 
+    public Book() {
+    }
+
     public Book(ResultSet rs) throws SQLException {
         this.boolNumber = rs.getString("bno");
         this.category = rs.getString("category");

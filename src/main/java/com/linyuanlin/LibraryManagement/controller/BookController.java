@@ -9,6 +9,7 @@ import io.javalin.http.Context;
 import org.eclipse.jetty.http.HttpStatus;
 
 import java.sql.Connection;
+import java.util.List;
 import java.util.Optional;
 
 public class BookController {
@@ -36,24 +37,63 @@ public class BookController {
             ctx.result(mapper.writeValueAsString(book.get()));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            ctx.status(500);
-            ctx.result("{\"code\": \"INTERNAL_SERVER_ERROR\"}");
+            throw new CustomException(
+                    "INTERNAL_SERVER_ERROR",
+                    "failed to parse result into json",
+                    HttpStatus.INTERNAL_SERVER_ERROR_500
+            );
         }
     }
 
-    public void getManyBookHandler(Context ctx) {
-
+    public void getManyBookHandler(Context ctx) throws CustomException {
+        List<Book> books = bookService.getMany();
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            ctx.result(mapper.writeValueAsString(books));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new CustomException(
+                    "INTERNAL_SERVER_ERROR",
+                    "failed to parse result into json",
+                    HttpStatus.INTERNAL_SERVER_ERROR_500
+            );
+        }
     }
 
     public void insertBookHandler(Context ctx) {
-
+        Book newBook = new Book();
+        newBook.setTitle(ctx.formParam("title"));
+        newBook.setBoolNumber(ctx.formParam("bno"));
+        newBook.setAuthor(ctx.formParam("author"));
+        newBook.setCategory(ctx.formParam("category"));
+        newBook.setTotal(Integer.parseInt(ctx.formParam("total")));
+        newBook.setStock(Integer.parseInt(ctx.formParam("total")));
+        bookService.insert(newBook);
     }
 
-    public void updateBookHandler(Context ctx) {
+    public void updateBookHandler(Context ctx) throws CustomException {
+        Optional<Book> res = bookService.getOne(ctx.pathParam("bookNumber"));
 
+        if (res.isEmpty()) {
+            throw new CustomException(
+                    "BOOK_NOT_FOUND",
+                    "Book with bookNumber " + ctx.pathParam("bookNumber") + " not found",
+                    HttpStatus.NOT_FOUND_404
+            );
+        }
+
+        Book newBook = res.get();
+        newBook.setTitle(ctx.formParam("title"));
+        newBook.setBoolNumber(ctx.formParam("bno"));
+        newBook.setAuthor(ctx.formParam("author"));
+        newBook.setCategory(ctx.formParam("category"));
+        newBook.setTotal(Integer.parseInt(ctx.formParam("total")));
+        newBook.setStock(Integer.parseInt(ctx.formParam("total")));
+
+        bookService.update(newBook);
     }
 
     public void deleteBookHandler(Context ctx) {
-
+        bookService.delete(ctx.pathParam("bookNumber"));
     }
 }
