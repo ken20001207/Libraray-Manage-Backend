@@ -11,6 +11,9 @@ public class Borrow {
     private Date borrowDate;
     private Date returnDate;
 
+    public Borrow() {
+    }
+
     public Borrow(ResultSet rs) throws SQLException {
         this.uuid = rs.getString("uuid");
         this.cardNumber = rs.getString("cno");

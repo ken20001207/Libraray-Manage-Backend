@@ -9,6 +9,9 @@ public class Card {
     private String department;
     private char type;
 
+    public Card() {
+    }
+
     public Card(ResultSet rs) throws SQLException {
         this.cardNumber = rs.getString("cno");
         this.name = rs.getString("name");

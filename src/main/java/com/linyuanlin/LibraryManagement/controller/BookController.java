@@ -63,15 +63,30 @@ public class BookController {
     }
 
     // 新书入库
-    public void insertBookHandler(Context ctx) {
+    public void insertBookHandler(Context ctx) throws CustomException {
+
         Book newBook = new Book();
+
         newBook.setTitle(ctx.formParam("title"));
-        newBook.setBoolNumber(ctx.formParam("bno"));
+        newBook.setBookNumber(ctx.formParam("bno"));
         newBook.setAuthor(ctx.formParam("author"));
         newBook.setCategory(ctx.formParam("category"));
         newBook.setTotal(Integer.parseInt(ctx.formParam("total")));
         newBook.setStock(Integer.parseInt(ctx.formParam("total")));
-        bookService.insert(newBook);
+
+        newBook = bookService.insert(newBook);
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            ctx.result(mapper.writeValueAsString(newBook));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new CustomException(
+                    "INTERNAL_SERVER_ERROR",
+                    "failed to parse result into json",
+                    HttpStatus.INTERNAL_SERVER_ERROR_500
+            );
+        }
     }
 
     // 更新书本信息
@@ -88,13 +103,25 @@ public class BookController {
 
         Book newBook = res.get();
         newBook.setTitle(ctx.formParam("title"));
-        newBook.setBoolNumber(ctx.formParam("bno"));
+        newBook.setBookNumber(ctx.formParam("bno"));
         newBook.setAuthor(ctx.formParam("author"));
         newBook.setCategory(ctx.formParam("category"));
         newBook.setTotal(Integer.parseInt(ctx.formParam("total")));
         newBook.setStock(Integer.parseInt(ctx.formParam("total")));
 
-        bookService.update(newBook);
+        newBook = bookService.update(newBook);
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            ctx.result(mapper.writeValueAsString(newBook));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new CustomException(
+                    "INTERNAL_SERVER_ERROR",
+                    "failed to parse result into json",
+                    HttpStatus.INTERNAL_SERVER_ERROR_500
+            );
+        }
     }
 
     // 移除书本

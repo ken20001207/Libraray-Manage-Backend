@@ -17,7 +17,5 @@ public class BorrowRouter {
         app.post("/borrow/:uuid", borrowController::updateBorrowHandler);
 
         app.post("/borrow", borrowController::insertBorrowHandler);
-
-        app.delete("/borrow/:uuid", borrowController::deleteBorrowHandler);
     }
 }

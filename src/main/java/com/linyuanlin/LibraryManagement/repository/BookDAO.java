@@ -59,7 +59,7 @@ public class BookDAO {
             Statement stmt = dataSource.createStatement();
 
             String sql = "INSERT INTO book value (" +
-                    book.getBoolNumber() + "," + book.getCategory() + "," +
+                    book.getBookNumber() + "," + book.getCategory() + "," +
                     book.getTitle() + "," + book.getPress() + "," +
                     book.getYear() + "," + book.getAuthor() + "," +
                     book.getPrice() + "," + book.getTotal() + "," + book.getStock() + ")";
@@ -78,7 +78,7 @@ public class BookDAO {
             Statement stmt = dataSource.createStatement();
 
             String sql = "UPDATE book SET bno=" +
-                    book.getBoolNumber() + ", category=" + book.getCategory() + ", title=" +
+                    book.getBookNumber() + ", category=" + book.getCategory() + ", title=" +
                     book.getTitle() + ", press=" + book.getPress() + ", year=" +
                     book.getYear() + ", author=" + book.getAuthor() + ", price=" +
                     book.getPrice() + ", total=" + book.getTotal() + ", stock=" + book.getStock() + ")";

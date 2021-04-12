@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Book {
-    private String boolNumber;
+    private String bookNumber;
     private String title;
     private String press;
     private int year;
@@ -19,7 +19,7 @@ public class Book {
     }
 
     public Book(ResultSet rs) throws SQLException {
-        this.boolNumber = rs.getString("bno");
+        this.bookNumber = rs.getString("bno");
         this.category = rs.getString("category");
         this.title = rs.getString("title");
         this.press = rs.getString("press");
@@ -30,12 +30,12 @@ public class Book {
         this.stock = rs.getInt("stock");
     }
 
-    public String getBoolNumber() {
-        return boolNumber;
+    public String getBookNumber() {
+        return bookNumber;
     }
 
-    public void setBoolNumber(String boolNumber) {
-        this.boolNumber = boolNumber;
+    public void setBookNumber(String bookNumber) {
+        this.bookNumber = bookNumber;
     }
 
     public String getTitle() {
