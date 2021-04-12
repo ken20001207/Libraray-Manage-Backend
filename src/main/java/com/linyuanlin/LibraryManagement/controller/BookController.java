@@ -20,6 +20,7 @@ public class BookController {
         this.bookService = new BookService(dataSource);
     }
 
+    // 请求一本书
     public void getOneBookHandler(Context ctx) throws CustomException {
 
         Optional<Book> book = bookService.getOne(ctx.pathParam("bookNumber"));
@@ -45,6 +46,7 @@ public class BookController {
         }
     }
 
+    // 请求多本书
     public void getManyBookHandler(Context ctx) throws CustomException {
         List<Book> books = bookService.getMany();
         try {
@@ -60,6 +62,7 @@ public class BookController {
         }
     }
 
+    // 新书入库
     public void insertBookHandler(Context ctx) {
         Book newBook = new Book();
         newBook.setTitle(ctx.formParam("title"));
@@ -71,6 +74,7 @@ public class BookController {
         bookService.insert(newBook);
     }
 
+    // 更新书本信息
     public void updateBookHandler(Context ctx) throws CustomException {
         Optional<Book> res = bookService.getOne(ctx.pathParam("bookNumber"));
 
@@ -93,6 +97,7 @@ public class BookController {
         bookService.update(newBook);
     }
 
+    // 移除书本
     public void deleteBookHandler(Context ctx) {
         bookService.delete(ctx.pathParam("bookNumber"));
     }

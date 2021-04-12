@@ -13,23 +13,23 @@ public class BorrowController {
         this.borrowService = new BorrowService(dataSource);
     }
 
+    // 请求一笔借书记录
     public void getOneBorrowHandler(Context ctx) {
 
     }
 
+    // 请求多笔借书记录
     public void getManyBorrowHandler(Context ctx) {
 
     }
 
+    // 借书
     public void insertBorrowHandler(Context ctx) {
 
     }
 
+    // 还书
     public void updateBorrowHandler(Context ctx) {
-
-    }
-
-    public void deleteBorrowHandler(Context ctx) {
 
     }
 }
