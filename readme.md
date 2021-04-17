@@ -7,6 +7,9 @@ course homework.
 一个简单的图书管理系统 RESTful API
 服务器，作为数据库课程作业，用 [Javalin](https://github.com/tipsy/javalin) 框架搭建。
 
+前端 [ken20001207/Library-Manage-Frontend](https://github.com/ken20001207/Library-Manage-Frontend)
+，用 React 搭建的网页应用。
+
 ## Build the `.jar` file
 
 This project using [Maven](https://maven.apache.org) as the dependencies
