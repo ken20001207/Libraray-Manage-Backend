@@ -10,6 +10,7 @@ import io.javalin.http.Context;
 import org.eclipse.jetty.http.HttpStatus;
 
 import java.sql.Connection;
+import java.util.List;
 
 public class CardController {
 
@@ -25,8 +26,20 @@ public class CardController {
     }
 
     // 查询多笔借书证信息
-    public void getManyCardHandler(Context ctx) {
+    public void getManyCardHandler(Context ctx) throws CustomException {
+        List<Card> cards = cardService.getMany();
 
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            ctx.result(mapper.writeValueAsString(cards));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new CustomException(
+                    "INTERNAL_SERVER_ERROR",
+                    "failed to parse result into json",
+                    HttpStatus.INTERNAL_SERVER_ERROR_500
+            );
+        }
     }
 
     // 申办新的借书证

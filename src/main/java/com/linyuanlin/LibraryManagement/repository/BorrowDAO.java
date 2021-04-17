@@ -63,8 +63,7 @@ public class BorrowDAO {
                     + borrow.getBookNumber() + ", " + borrow.getBorrowDate() + ", "
                     + borrow.getReturnDate() + ")";
 
-            ResultSet rs = stmt.executeQuery(sql);
-            rs.close();
+            stmt.execute(sql);
             stmt.close();
         } catch (SQLException throwable) {
             throwable.printStackTrace();
@@ -81,8 +80,7 @@ public class BorrowDAO {
                     + borrow.getBookNumber() + "', borrow_date=" + borrow.getBorrowDate() + ", return_date="
                     + borrow.getReturnDate() + ")";
 
-            ResultSet rs = stmt.executeQuery(sql);
-            rs.close();
+            stmt.execute(sql);
             stmt.close();
         } catch (SQLException throwable) {
             throwable.printStackTrace();
@@ -96,8 +94,7 @@ public class BorrowDAO {
 
             String sql = "DELETE FROM borrow WHERE uuid=" + uuid;
 
-            ResultSet rs = stmt.executeQuery(sql);
-            rs.close();
+            stmt.execute(sql);
             stmt.close();
         } catch (SQLException throwable) {
             throwable.printStackTrace();

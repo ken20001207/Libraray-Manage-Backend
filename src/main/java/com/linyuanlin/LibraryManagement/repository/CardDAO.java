@@ -2,6 +2,8 @@ package com.linyuanlin.LibraryManagement.repository;
 
 
 import com.linyuanlin.LibraryManagement.model.Card;
+import com.linyuanlin.LibraryManagement.model.CustomException;
+import org.eclipse.jetty.http.HttpStatus;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -54,19 +56,22 @@ public class CardDAO {
         return Optional.empty();
     }
 
-    public Card insert(Card card) {
+    public Card insert(Card card) throws CustomException {
         try {
             Statement stmt = dataSource.createStatement();
 
-            String sql = "INSERT INTO card value ("
-                    + card.getCardNumber() + ", " + card.getDepartment() + ", "
-                    + card.getType() + ")";
+            String sql = "INSERT INTO card value ('"
+                    + card.getCardNumber() + "','" + card.getName() + "','" + card.getDepartment() + "','"
+                    + card.getType() + "')";
 
-            ResultSet rs = stmt.executeQuery(sql);
-            rs.close();
+            stmt.execute(sql);
             stmt.close();
         } catch (SQLException throwable) {
-            throwable.printStackTrace();
+            throw new CustomException(
+                    "INTERNAL_SERVER_ERROR",
+                    "SQL Error: " + throwable.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR_500
+            );
         }
         return card;
     }
@@ -79,8 +84,7 @@ public class CardDAO {
                     + card.getCardNumber() + "', name='" + card.getName() + "', department='"
                     + card.getDepartment() + "', type=" + card.getType() + ")";
 
-            ResultSet rs = stmt.executeQuery(sql);
-            rs.close();
+            stmt.execute(sql);
             stmt.close();
         } catch (SQLException throwable) {
             throwable.printStackTrace();
@@ -94,8 +98,7 @@ public class CardDAO {
 
             String sql = "DELETE FROM card WHERE cno='" + cardNumber + "'";
 
-            ResultSet rs = stmt.executeQuery(sql);
-            rs.close();
+            stmt.execute(sql);
             stmt.close();
         } catch (SQLException throwable) {
             throwable.printStackTrace();

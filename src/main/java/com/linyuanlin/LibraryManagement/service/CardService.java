@@ -1,9 +1,11 @@
 package com.linyuanlin.LibraryManagement.service;
 
 import com.linyuanlin.LibraryManagement.model.Card;
+import com.linyuanlin.LibraryManagement.model.CustomException;
 import com.linyuanlin.LibraryManagement.repository.CardDAO;
 
 import java.sql.Connection;
+import java.util.List;
 import java.util.Optional;
 
 public class CardService {
@@ -18,7 +20,11 @@ public class CardService {
         return cardDAO.getOneByCardNumber(cardNumber);
     }
 
-    public Card insert(Card newCard) {
+    public List<Card> getMany() {
+        return cardDAO.getAll();
+    }
+
+    public Card insert(Card newCard) throws CustomException {
         return cardDAO.insert(newCard);
     }
 
