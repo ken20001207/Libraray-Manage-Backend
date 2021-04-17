@@ -70,6 +70,8 @@ public class BookController {
         newBook.setTitle(ctx.formParam("title"));
         newBook.setBookNumber(ctx.formParam("bno"));
         newBook.setAuthor(ctx.formParam("author"));
+        newBook.setPress(ctx.formParam("press"));
+        newBook.setYear(Integer.parseInt(ctx.formParam("year")));
         newBook.setCategory(ctx.formParam("category"));
         newBook.setTotal(Integer.parseInt(ctx.formParam("total")));
         newBook.setStock(Integer.parseInt(ctx.formParam("total")));

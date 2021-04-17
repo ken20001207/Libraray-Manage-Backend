@@ -2,6 +2,8 @@ package com.linyuanlin.LibraryManagement.repository;
 
 
 import com.linyuanlin.LibraryManagement.model.Book;
+import com.linyuanlin.LibraryManagement.model.CustomException;
+import org.eclipse.jetty.http.HttpStatus;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -54,21 +56,24 @@ public class BookDAO {
         return Optional.empty();
     }
 
-    public Book insert(Book book) {
+    public Book insert(Book book) throws CustomException {
         try {
             Statement stmt = dataSource.createStatement();
 
-            String sql = "INSERT INTO book value (" +
-                    book.getBookNumber() + "," + book.getCategory() + "," +
-                    book.getTitle() + "," + book.getPress() + "," +
-                    book.getYear() + "," + book.getAuthor() + "," +
+            String sql = "INSERT INTO book value ('" +
+                    book.getBookNumber() + "','" + book.getCategory() + "','" +
+                    book.getTitle() + "','" + book.getPress() + "','" +
+                    book.getYear() + "','" + book.getAuthor() + "'," +
                     book.getPrice() + "," + book.getTotal() + "," + book.getStock() + ")";
 
-            ResultSet rs = stmt.executeQuery(sql);
-            rs.close();
+            stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException throwable) {
-            throwable.printStackTrace();
+            throw new CustomException(
+                    "INTERNAL_SERVER_ERROR",
+                    "SQL Error: " + throwable.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR_500
+            );
         }
         return book;
     }
@@ -95,11 +100,8 @@ public class BookDAO {
     public void delete(String bookNumber) {
         try {
             Statement stmt = dataSource.createStatement();
-
-            String sql = "DELETE FROM book WHERE bno=" + bookNumber;
-
-            ResultSet rs = stmt.executeQuery(sql);
-            rs.close();
+            String sql = "DELETE FROM book WHERE bno='" + bookNumber + "'";
+            stmt.execute(sql);
             stmt.close();
         } catch (SQLException throwable) {
             throwable.printStackTrace();

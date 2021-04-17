@@ -1,6 +1,7 @@
 package com.linyuanlin.LibraryManagement.service;
 
 import com.linyuanlin.LibraryManagement.model.Book;
+import com.linyuanlin.LibraryManagement.model.CustomException;
 import com.linyuanlin.LibraryManagement.repository.BookDAO;
 
 import java.sql.Connection;
@@ -23,7 +24,7 @@ public class BookService {
         return bookDAO.getAll();
     }
 
-    public Book insert(Book book) {
+    public Book insert(Book book) throws CustomException {
         return bookDAO.insert(book);
     }
 

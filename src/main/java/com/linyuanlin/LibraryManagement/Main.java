@@ -13,11 +13,12 @@ public class Main {
 
         // Start Http Service 启动 Http 服务
 
-        Javalin app = Javalin.create(config ->
-                config.requestLogger((ctx, ms) ->
-                        System.out.println(ctx.status() + " " + ctx.method() + " " + ctx.url() + " " + ms + " ms")
-                )
-        ).start(7000);
+        Javalin app = Javalin.create(config -> {
+            config.requestLogger((ctx, ms) ->
+                    System.out.println(ctx.status() + " " + ctx.method() + " " + ctx.url() + " " + ms + " ms")
+            );
+            config.enableCorsForAllOrigins();
+        }).start(7000);
 
         // Declare all the response is JSON type 声明服务的所有回传都是 JSON 格式
 
@@ -28,6 +29,9 @@ public class Main {
         // Register Exception Handler 注册错误处理中间件
 
         app.exception(CustomException.class, (e, ctx) -> {
+            if (e.getStatus() == 500)
+                System.out.println("Error: " + e.getJson());
+
             ctx.status(e.getStatus());
             ctx.result(e.getJson());
         });
