@@ -13,7 +13,7 @@ import io.javalin.http.Context;
 import org.eclipse.jetty.http.HttpStatus;
 
 import java.sql.Connection;
-import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.UUID.randomUUID;
@@ -36,8 +36,19 @@ public class BorrowController {
     }
 
     // 请求多笔借书记录
-    public void getManyBorrowHandler(Context ctx) {
-
+    public void getManyBorrowHandler(Context ctx) throws CustomException {
+        List<Borrow> borrows = borrowService.getMany();
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            ctx.result(mapper.writeValueAsString(borrows));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new CustomException(
+                    "INTERNAL_SERVER_ERROR",
+                    "failed to parse result into json",
+                    HttpStatus.INTERNAL_SERVER_ERROR_500
+            );
+        }
     }
 
     // 借书
@@ -58,7 +69,7 @@ public class BorrowController {
         if (book.getStock() == 0) {
             throw new CustomException(
                     "BOOK_OUT_OF_STOCK",
-                    "Book with book number " + ctx.pathParam("bno") + " is out of stock",
+                    "Book with book number " + ctx.formParam("bno") + " is out of stock",
                     HttpStatus.NOT_ACCEPTABLE_406
             );
         }
@@ -68,7 +79,7 @@ public class BorrowController {
         if (findCardRes.isEmpty()) {
             throw new CustomException(
                     "CARD_NOT_FOUND",
-                    "Card with card number " + ctx.pathParam("cno") + " not found",
+                    "Card with card number " + ctx.formParam("cno") + " not found",
                     HttpStatus.NOT_FOUND_404
             );
         }
@@ -76,7 +87,8 @@ public class BorrowController {
         Card card = findCardRes.get();
 
         Borrow borrow = new Borrow();
-        borrow.setBorrowDate(new Date());
+        java.sql.Date sqlDate = new java.sql.Date(System.currentTimeMillis());
+        borrow.setBorrowDate(sqlDate);
         borrow.setCardNumber(card.getCardNumber());
         borrow.setBookNumber(book.getBookNumber());
         borrow.setUuid(randomUUID().toString().substring(0, 18));
@@ -100,7 +112,44 @@ public class BorrowController {
     }
 
     // 还书
-    public void updateBorrowHandler(Context ctx) {
+    public void updateBorrowHandler(Context ctx) throws CustomException {
 
+        Optional<Borrow> b = borrowService.getOne(ctx.pathParam("uuid"));
+
+        if (b.isEmpty()) {
+            throw new CustomException(
+                    "BORROW_NOT_FOUND",
+                    "Borrow with uuid " + ctx.pathParam("uuid") + " not found",
+                    HttpStatus.NOT_FOUND_404
+            );
+        }
+
+        Optional<Book> book = bookService.getOne(b.get().getBookNumber());
+
+        if (book.isEmpty()) {
+            throw new CustomException(
+                    "BOOK_NOT_FOUND",
+                    "Book with bookNumber " + b.get().getBookNumber() + " not found",
+                    HttpStatus.NOT_FOUND_404
+            );
+        }
+        java.sql.Date sqlDate = new java.sql.Date(System.currentTimeMillis());
+        b.get().setReturnDate(sqlDate);
+        book.get().setStock(book.get().getStock() + 1);
+
+        borrowService.update(b.get());
+        bookService.update(book.get());
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            ctx.result(mapper.writeValueAsString(b.get()));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new CustomException(
+                    "INTERNAL_SERVER_ERROR",
+                    "failed to parse result into json",
+                    HttpStatus.INTERNAL_SERVER_ERROR_500
+            );
+        }
     }
 }

@@ -82,14 +82,12 @@ public class BookDAO {
         try {
             Statement stmt = dataSource.createStatement();
 
-            String sql = "UPDATE book SET bno=" +
-                    book.getBookNumber() + ", category=" + book.getCategory() + ", title=" +
-                    book.getTitle() + ", press=" + book.getPress() + ", year=" +
-                    book.getYear() + ", author=" + book.getAuthor() + ", price=" +
-                    book.getPrice() + ", total=" + book.getTotal() + ", stock=" + book.getStock() + ")";
-
-            ResultSet rs = stmt.executeQuery(sql);
-            rs.close();
+            String sql = "UPDATE book SET category='" + book.getCategory() + "', title='" +
+                    book.getTitle() + "', press='" + book.getPress() + "', year=" +
+                    book.getYear() + ", author='" + book.getAuthor() + "', price=" +
+                    book.getPrice() + ", total=" + book.getTotal() + ", stock=" + book.getStock() + " WHERE bno='" + book.getBookNumber() + "'";
+            System.out.println(sql);
+            stmt.execute(sql);
             stmt.close();
         } catch (SQLException throwable) {
             throwable.printStackTrace();

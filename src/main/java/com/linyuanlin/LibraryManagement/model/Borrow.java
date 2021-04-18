@@ -1,8 +1,8 @@
 package com.linyuanlin.LibraryManagement.model;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 
 public class Borrow {
     private String uuid;

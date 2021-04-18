@@ -58,10 +58,9 @@ public class BorrowDAO {
         try {
             Statement stmt = dataSource.createStatement();
 
-            String sql = "INSERT INTO borrow value ("
-                    + borrow.getUuid() + ", " + borrow.getCardNumber() + ", "
-                    + borrow.getBookNumber() + ", " + borrow.getBorrowDate() + ", "
-                    + borrow.getReturnDate() + ")";
+            String sql = "INSERT INTO borrow value ('"
+                    + borrow.getUuid() + "', '" + borrow.getCardNumber() + "', '"
+                    + borrow.getBookNumber() + "', '" + borrow.getBorrowDate() + "', null)";
 
             stmt.execute(sql);
             stmt.close();
@@ -75,11 +74,10 @@ public class BorrowDAO {
         try {
             Statement stmt = dataSource.createStatement();
 
-            String sql = "UPDATE borrow SET uuid='"
-                    + borrow.getUuid() + "', cno='" + borrow.getCardNumber() + "', bno='"
-                    + borrow.getBookNumber() + "', borrow_date=" + borrow.getBorrowDate() + ", return_date="
-                    + borrow.getReturnDate() + ")";
-
+            String sql = "UPDATE borrow SET cno='" + borrow.getCardNumber() + "', bno='"
+                    + borrow.getBookNumber() + "', borrow_date='" + borrow.getBorrowDate() + "', return_date='"
+                    + borrow.getReturnDate() + "' WHERE uuid='" + borrow.getUuid() + "'";
+            System.out.println(sql);
             stmt.execute(sql);
             stmt.close();
         } catch (SQLException throwable) {
