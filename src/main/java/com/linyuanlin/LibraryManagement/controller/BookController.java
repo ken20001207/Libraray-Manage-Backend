@@ -6,10 +6,17 @@ import com.linyuanlin.LibraryManagement.model.Book;
 import com.linyuanlin.LibraryManagement.model.CustomException;
 import com.linyuanlin.LibraryManagement.service.BookService;
 import io.javalin.http.Context;
+import io.javalin.http.UploadedFile;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.http.HttpStatus;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class BookController {
@@ -18,6 +25,30 @@ public class BookController {
 
     public BookController(Connection dataSource) {
         this.bookService = new BookService(dataSource);
+    }
+
+    // 批量导入书籍
+    public void importBooksFromFile(Context ctx) throws IOException, CustomException {
+        List<UploadedFile> files = ctx.uploadedFiles();
+        StringWriter writer = new StringWriter();
+        IOUtils.copy(files.get(0).getContent(), writer, StandardCharsets.UTF_8);
+        String data = writer.toString().replace("(", "").replace(")", "");
+        String[] lines = data.split("\n");
+        for (String line : lines) {
+            String[] cols = line.split(",");
+            Book newBook = new Book();
+            newBook.setBookNumber(cols[0]);
+            newBook.setCategory(cols[1]);
+            newBook.setTitle(cols[2]);
+            newBook.setPress(cols[3]);
+            newBook.setYear(Integer.parseInt(cols[4]));
+            newBook.setAuthor(cols[5]);
+            newBook.setPrice(Double.parseDouble(cols[6]));
+            newBook.setTotal(Integer.parseInt(cols[7]));
+            newBook.setStock(Integer.parseInt(cols[7]));
+            bookService.insert(newBook);
+        }
+        ctx.result(String.valueOf(lines.length));
     }
 
     // 请求一本书
@@ -48,7 +79,13 @@ public class BookController {
 
     // 请求多本书
     public void getManyBookHandler(Context ctx) throws CustomException {
-        List<Book> books = bookService.getMany();
+
+        Map<String, String> q = new HashMap<>();
+        for (Map.Entry<String, List<String>> entry : ctx.queryParamMap().entrySet()) {
+            q.put(entry.getKey(), entry.getValue().get(0));
+        }
+        List<Book> books = bookService.getMany(q);
+
         try {
             ObjectMapper mapper = new ObjectMapper();
             ctx.result(mapper.writeValueAsString(books));

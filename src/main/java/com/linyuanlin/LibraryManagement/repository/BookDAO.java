@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class BookDAO {
@@ -20,12 +21,34 @@ public class BookDAO {
         this.dataSource = dataSource;
     }
 
-    public List<Book> getAll() {
+    public List<Book> getAll(Map<String, String> query) {
         List<Book> books = new ArrayList<>();
         try {
             Statement stmt = dataSource.createStatement();
-            String sql = "SELECT * FROM book";
-            ResultSet rs = stmt.executeQuery(sql);
+
+            StringBuilder sql = new StringBuilder("SELECT * FROM book WHERE ");
+            sql.append("year <= ").append(query.get("year_top"));
+            sql.append(" AND year >= ").append(query.get("year_bottom"));
+            sql.append(" AND price <= ").append(query.get("price_top"));
+            sql.append(" AND price >= ").append(query.get("price_bottom"));
+
+            if (!query.get("book_number").equals(""))
+                sql.append(" AND bno = '").append(query.get("book_number")).append("'");
+
+            if (!query.get("title").equals(""))
+                sql.append(" AND title = '").append(query.get("title")).append("'");
+
+            if (!query.get("author").equals(""))
+                sql.append(" AND author = '").append(query.get("author")).append("'");
+
+            if (!query.get("press").equals(""))
+                sql.append(" AND press = '").append(query.get("press")).append("'");
+
+            if (!query.get("category").equals(""))
+                sql.append(" AND category = '").append(query.get("category")).append("'");
+
+            System.out.println(sql);
+            ResultSet rs = stmt.executeQuery(sql.toString());
 
             while (rs.next()) books.add(new Book(rs));
 

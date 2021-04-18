@@ -19,5 +19,7 @@ public class BookRouter {
         app.post("/book", bookController::insertBookHandler);
 
         app.delete("/book/:bookNumber", bookController::deleteBookHandler);
+
+        app.post("/books", bookController::importBooksFromFile);
     }
 }

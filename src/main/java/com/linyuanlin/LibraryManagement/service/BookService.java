@@ -6,6 +6,7 @@ import com.linyuanlin.LibraryManagement.repository.BookDAO;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class BookService {
@@ -20,8 +21,8 @@ public class BookService {
         return bookDAO.getOneByBookNumber(bookNumber);
     }
 
-    public List<Book> getMany() {
-        return bookDAO.getAll();
+    public List<Book> getMany(Map<String, String> queryMap) {
+        return bookDAO.getAll(queryMap);
     }
 
     public Book insert(Book book) throws CustomException {
