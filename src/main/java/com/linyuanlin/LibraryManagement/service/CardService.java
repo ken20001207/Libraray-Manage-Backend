@@ -6,6 +6,7 @@ import com.linyuanlin.LibraryManagement.repository.CardDAO;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class CardService {
@@ -20,8 +21,8 @@ public class CardService {
         return cardDAO.getOneByCardNumber(cardNumber);
     }
 
-    public List<Card> getMany() {
-        return cardDAO.getAll();
+    public List<Card> getMany(Map<String, String> queryMap) {
+        return cardDAO.getAll(queryMap);
     }
 
     public Card insert(Card newCard) throws CustomException {

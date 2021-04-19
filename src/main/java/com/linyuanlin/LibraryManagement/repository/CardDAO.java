@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class CardDAO {
@@ -20,12 +21,20 @@ public class CardDAO {
         this.dataSource = dataSource;
     }
 
-    public List<Card> getAll() {
+    public List<Card> getAll(Map<String, String> query) {
         List<Card> cards = new ArrayList<>();
         try {
             Statement stmt = dataSource.createStatement();
-            String sql = "SELECT * FROM card";
-            ResultSet rs = stmt.executeQuery(sql);
+            StringBuilder sql = new StringBuilder("SELECT * FROM card WHERE true");
+
+            if (!query.get("name").equals(""))
+                sql.append(" AND name = '").append(query.get("name")).append("'");
+
+            if (!query.get("card_number").equals(""))
+                sql.append(" AND cno = '").append(query.get("card_number")).append("'");
+
+            System.out.println(sql);
+            ResultSet rs = stmt.executeQuery(sql.toString());
 
             while (rs.next()) cards.add(new Card(rs));
 
