@@ -108,8 +108,9 @@ public class BookController {
         newBook.setBookNumber(ctx.formParam("bno"));
         newBook.setAuthor(ctx.formParam("author"));
         newBook.setPress(ctx.formParam("press"));
-        newBook.setYear(Integer.parseInt(ctx.formParam("year")));
         newBook.setCategory(ctx.formParam("category"));
+
+        newBook.setYear(Integer.parseInt(ctx.formParam("year")));
         newBook.setTotal(Integer.parseInt(ctx.formParam("total")));
         newBook.setStock(Integer.parseInt(ctx.formParam("total")));
 
@@ -142,11 +143,13 @@ public class BookController {
 
         Book newBook = res.get();
         newBook.setTitle(ctx.formParam("title"));
-        newBook.setBookNumber(ctx.formParam("bno"));
         newBook.setAuthor(ctx.formParam("author"));
         newBook.setCategory(ctx.formParam("category"));
+        newBook.setPress(ctx.formParam("press"));
+
         newBook.setTotal(Integer.parseInt(ctx.formParam("total")));
-        newBook.setStock(Integer.parseInt(ctx.formParam("total")));
+        newBook.setPrice(Integer.parseInt(ctx.formParam("price")));
+        newBook.setStock(Integer.parseInt(ctx.formParam("stock")));
 
         newBook = bookService.update(newBook);
 
