@@ -13,7 +13,9 @@ import io.javalin.http.Context;
 import org.eclipse.jetty.http.HttpStatus;
 
 import java.sql.Connection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static java.util.UUID.randomUUID;
@@ -37,7 +39,14 @@ public class BorrowController {
 
     // 请求多笔借书记录
     public void getManyBorrowHandler(Context ctx) throws CustomException {
-        List<Borrow> borrows = borrowService.getMany();
+
+        Map<String, String> q = new HashMap<>();
+        for (Map.Entry<String, List<String>> entry : ctx.queryParamMap().entrySet()) {
+            q.put(entry.getKey(), entry.getValue().get(0));
+        }
+
+        List<Borrow> borrows = borrowService.getMany(q);
+
         try {
             ObjectMapper mapper = new ObjectMapper();
             ctx.result(mapper.writeValueAsString(borrows));

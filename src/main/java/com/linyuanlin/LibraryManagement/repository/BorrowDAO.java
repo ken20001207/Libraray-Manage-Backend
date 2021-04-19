@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class BorrowDAO {
@@ -18,12 +19,24 @@ public class BorrowDAO {
         this.dataSource = dataSource;
     }
 
-    public List<Borrow> getAll() {
+    public List<Borrow> getAll(Map<String, String> query) {
         List<Borrow> borrows = new ArrayList<>();
         try {
             Statement stmt = dataSource.createStatement();
-            String sql = "SELECT * FROM borrow";
-            ResultSet rs = stmt.executeQuery(sql);
+
+            StringBuilder sql = new StringBuilder("SELECT * FROM borrow WHERE true");
+
+            if (!query.get("card_number").equals(""))
+                sql.append(" AND cno = '").append(query.get("card_number")).append("'");
+
+            if (!query.get("book_number").equals(""))
+                sql.append(" AND bno = '").append(query.get("book_number")).append("'");
+
+            if (!query.get("uuid").equals(""))
+                sql.append(" AND uuid = '").append(query.get("uuid")).append("'");
+
+            System.out.println(sql);
+            ResultSet rs = stmt.executeQuery(sql.toString());
 
             while (rs.next()) borrows.add(new Borrow(rs));
 

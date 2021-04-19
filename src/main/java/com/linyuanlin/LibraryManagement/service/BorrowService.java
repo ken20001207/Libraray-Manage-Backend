@@ -5,6 +5,7 @@ import com.linyuanlin.LibraryManagement.repository.BorrowDAO;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class BorrowService {
@@ -23,8 +24,8 @@ public class BorrowService {
         return borrowDAO.getOneByUUID(uuid);
     }
 
-    public List<Borrow> getMany() {
-        return borrowDAO.getAll();
+    public List<Borrow> getMany(Map<String, String> queryMap) {
+        return borrowDAO.getAll(queryMap);
     }
 
     public Borrow update(Borrow borrow) {
